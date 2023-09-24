@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 // You should replace the 'input.xy' with your real filename
-const input = fs.readFileSync('./input.xy').toString();;
+const input = fs.readFileSync('./input.xy').toString();
 
 // See https://en.wikipedia.org/wiki/Newline
 function getEOL(str) {
