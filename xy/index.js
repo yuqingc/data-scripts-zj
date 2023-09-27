@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const _ = require('lodash');
 
 // check if directory exists
 function directoryExists(dirPath) {
@@ -74,6 +75,7 @@ function processSingleFile(fileName) {
       currentTitle = getTitle(lineStr);
       currentData = {
         title: currentTitle,
+        name: fileName,
         xyList: {
           x: [],
           y: [],
@@ -134,9 +136,11 @@ function processSingleFile(fileName) {
 
   const fileNameWithoutSuffix = path.parse(fileName).name;
 
-  // fs.writeFileSync(`./output/${fileNameWithoutSuffix}.json`, JSON.stringify(resultData, null, 2));
+  fs.writeFileSync(`./output/${fileNameWithoutSuffix}.json`, JSON.stringify(resultData, null, 2));
 
   fs.writeFileSync(`./output/${fileNameWithoutSuffix}.csv`, [titleLine, subtitleLine, ...contentLines].join('\n'));
+
+  return resultData;
 }
 
 function processCSVFilesInDirectory(directoryPath) {
@@ -146,12 +150,38 @@ function processCSVFilesInDirectory(directoryPath) {
       return;
     }
 
-    files.forEach((fileName) => {
+    const resultDataList = files.map((fileName) => {
       if (fileName.endsWith('.xy')) {
-        processSingleFile(fileName);
+        return processSingleFile(fileName);
       }
+      return [];
+    });
+
+    const allData = _.flatten(resultDataList);
+    const dataGroupedByRegion = _.groupBy(allData, 'title')
+    fs.writeFileSync('ttttttttttt.json', JSON.stringify(dataGroupedByRegion, null, 2));
+
+    if (!directoryExists('./region_output')) {
+      fs.mkdirSync('region_output');
+    }
+
+    Object.keys(dataGroupedByRegion).forEach(key => {
+      const regionAllData = dataGroupedByRegion[key];
+      const titleLine = regionAllData.map(item => `X(${item.name}),Y(${item.name})`).join(',');
+      const maxRowNumber = Math.max(...regionAllData.map(item => item.xyList.x.length));
+      const groupDataLines = [];
+      for (let i = 0; i < maxRowNumber; i++) {
+        const lineString = regionAllData.map(item => `${item.xyList.x[i] || ''},${item.xyList.y[i] || ''}`).join(',');
+        groupDataLines.push(lineString);
+      }
+
+      fs.writeFileSync(`./region_output/${key}.csv`, [titleLine, ...groupDataLines].join('\n'));
+
+
     });
   });
+
+
 }
 
 
