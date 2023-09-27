@@ -159,7 +159,6 @@ function processCSVFilesInDirectory(directoryPath) {
 
     const allData = _.flatten(resultDataList);
     const dataGroupedByRegion = _.groupBy(allData, 'title')
-    fs.writeFileSync('ttttttttttt.json', JSON.stringify(dataGroupedByRegion, null, 2));
 
     if (!directoryExists('./region_output')) {
       fs.mkdirSync('region_output');
