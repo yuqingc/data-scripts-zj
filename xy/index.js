@@ -107,7 +107,7 @@ function processSingleFile(fileName) {
   // console.log(resultData);
 
   // The title line string
-  const titleLine = ''BE,' + resultData.map(item => item.title).join(',BE,');
+  const titleLine = 'BE,' + resultData.map(item => item.title).join(',BE,');
 
   // The subtitle line, ie., x,y,x,y...
   const subtitleLine = new Array(resultData.length).fill('x,y').join(',');
