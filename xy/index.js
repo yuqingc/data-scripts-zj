@@ -107,7 +107,7 @@ function processSingleFile(fileName) {
   // console.log(resultData);
 
   // The title line string
-  const titleLine = resultData.map(item => item.title).join(',,') + ',';
+  const titleLine = ''BE,' + resultData.map(item => item.title).join(',BE,');
 
   // The subtitle line, ie., x,y,x,y...
   const subtitleLine = new Array(resultData.length).fill('x,y').join(',');
@@ -137,8 +137,7 @@ function processSingleFile(fileName) {
   const fileNameWithoutSuffix = path.parse(fileName).name;
 
   fs.writeFileSync(`./output/${fileNameWithoutSuffix}.json`, JSON.stringify(resultData, null, 2));
-
-  fs.writeFileSync(`./output/${fileNameWithoutSuffix}.csv`, [titleLine, subtitleLine, ...contentLines].join('\n'));
+  fs.writeFileSync(`./output/${fileNameWithoutSuffix}.csv`, [titleLine, ...contentLines].join('\n'));
 
   return resultData;
 }
@@ -166,7 +165,7 @@ function processCSVFilesInDirectory(directoryPath) {
 
     Object.keys(dataGroupedByRegion).forEach(key => {
       const regionAllData = dataGroupedByRegion[key];
-      const titleLine = regionAllData.map(item => `X(${item.name}),Y(${item.name})`).join(',');
+      const titleLine = regionAllData.map(item => `BE,${item.name}`).join(',');
       const maxRowNumber = Math.max(...regionAllData.map(item => item.xyList.x.length));
       const groupDataLines = [];
       for (let i = 0; i < maxRowNumber; i++) {
